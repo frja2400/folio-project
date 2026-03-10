@@ -35,14 +35,11 @@ const Navbar = () => {
         navigate('/')
     }
 
-    // Navigeringslänkar beroende på roll
-    const renderNavLinks = () => {
+    // Desktop
+    const renderDesktopLinks = () => {
         if (!isAuthenticated) {
             return (
-                <Link
-                    to="/login"
-                    className="btn btn-outline-dark btn-sm"
-                >
+                <Link to="/login" className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>
                     Logga in
                 </Link>
             )
@@ -50,25 +47,30 @@ const Navbar = () => {
         return (
             <div className="d-flex gap-2 align-items-center">
                 {user?.role === 'admin' && (
-                    <Link
-                        to="/admin"
-                        className="btn btn-outline-dark btn-sm"
-                    >
-                        Admin
-                    </Link>
+                    <Link to="/admin" className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Admin</Link>
                 )}
-                <Link
-                    to="/profile"
-                    className="btn btn-outline-dark btn-sm"
-                >
-                    Min profil
-                </Link>
-                <button
-                    onClick={handleLogout}
-                    className="btn btn-outline-dark btn-sm"
-                >
-                    Logga ut
-                </button>
+                <Link to="/profile" className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Min profil</Link>
+                <button onClick={handleLogout} className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Logga ut</button>
+            </div>
+        )
+    }
+
+    // Mobil
+    const renderMobileLinks = () => {
+        if (!isAuthenticated) {
+            return (
+                <div className="d-flex justify-content-end">
+                    <Link to="/login" className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Logga in</Link>
+                </div>
+            )
+        }
+        return (
+            <div className="d-flex justify-content-between align-items-center w-100">
+                {user?.role === 'admin' && (
+                    <Link to="/admin" className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Admin</Link>
+                )}
+                <Link to="/profile" className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Min profil</Link>
+                <button onClick={handleLogout} className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Logga ut</button>
             </div>
         )
     }
@@ -122,16 +124,14 @@ const Navbar = () => {
                         </div>
                     </form>
 
-                    {renderNavLinks()}
+                    {renderDesktopLinks()}
                 </div>
 
                 {/* ===== MOBIL ===== */}
                 <div className="d-flex d-lg-none flex-column w-100 gap-2">
 
                     {/* Rad 1 — Navigeringslänkar */}
-                    <div className="d-flex justify-content-end">
-                        {renderNavLinks()}
-                    </div>
+                    {renderMobileLinks()}
 
                     {/* Rad 2 — Sökruta */}
                     <form onSubmit={handleSearch}>
