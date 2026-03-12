@@ -6,27 +6,20 @@ const Navbar = () => {
     const { user, isAuthenticated, logout } = useAuth()
     const navigate = useNavigate()
     const [query, setQuery] = useState('')
-    const [subject, setSubject] = useState('')
+    const [searchType, setSearchType] = useState('intitle')
 
-    const genres = [
-        { label: 'Alla genrer', value: '' },
-        { label: 'Fantasy', value: 'fantasy' },
-        { label: 'Science Fiction', value: 'science+fiction' },
-        { label: 'Thriller', value: 'thriller' },
-        { label: 'Romance', value: 'romance' },
-        { label: 'Deckare', value: 'mystery' },
-        { label: 'Skräck', value: 'horror' },
-        { label: 'Historia', value: 'history' },
-        { label: 'Biografi', value: 'biography' },
-        { label: 'Barn', value: 'juvenile+fiction' },
+    const searchTypes = [
+        { label: 'Titel', value: 'intitle' },
+        { label: 'Författare', value: 'inauthor' },
+        { label: 'ISBN', value: 'isbn' },
     ]
 
     const handleSearch = (e: React.SyntheticEvent) => {
         e.preventDefault()
-        if (!query.trim() && !subject) return
+        if (!query.trim()) return
         const params = new URLSearchParams()
-        if (query.trim()) params.set('q', query.trim())
-        if (subject) params.set('subject', subject)
+        params.set('q', query.trim())
+        params.set('type', searchType)
         navigate(`/search?${params.toString()}`)
     }
 
@@ -94,28 +87,28 @@ const Navbar = () => {
                                 FOLIO
                             </Link>
 
+                            {/* Söktyp */}
+                            <select
+                                className="form-select"
+                                style={{ maxWidth: '130px' }}
+                                value={searchType}
+                                onChange={(e) => setSearchType(e.target.value)}
+                            >
+                                {searchTypes.map((type) => (
+                                    <option key={type.value} value={type.value}>
+                                        {type.label}
+                                    </option>
+                                ))}
+                            </select>
+
                             {/* Fritext */}
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Sök titel, författare, ISBN..."
+                                placeholder="Sök..."
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                             />
-
-                            {/* Genre */}
-                            <select
-                                className="form-select"
-                                style={{ maxWidth: '160px' }}
-                                value={subject}
-                                onChange={(e) => setSubject(e.target.value)}
-                            >
-                                {genres.map((genre) => (
-                                    <option key={genre.value} value={genre.value}>
-                                        {genre.label}
-                                    </option>
-                                ))}
-                            </select>
 
                             {/* Sökknapp */}
                             <button type="submit" className="btn btn-dark">
@@ -133,33 +126,32 @@ const Navbar = () => {
                     {/* Rad 1 — Navigeringslänkar */}
                     {renderMobileLinks()}
 
-                    {/* Rad 2 — Sökruta */}
+                    {/* Rad 2 — Söktyp + sökruta */}
                     <form onSubmit={handleSearch}>
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Sök titel, författare, ISBN..."
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                        />
-                    </form>
-
-                    {/* Rad 3 — Genre + sökknapp */}
-                    <form className="d-flex gap-2" onSubmit={handleSearch}>
-                        <select
-                            className="form-select"
-                            value={subject}
-                            onChange={(e) => setSubject(e.target.value)}
-                        >
-                            {genres.map((genre) => (
-                                <option key={genre.value} value={genre.value}>
-                                    {genre.label}
-                                </option>
-                            ))}
-                        </select>
-                        <button type="submit" className="btn btn-dark">
-                            <i className="bi bi-search"></i>
-                        </button>
+                        <div className="input-group">
+                            <select
+                                className="form-select"
+                                style={{ maxWidth: '130px' }}
+                                value={searchType}
+                                onChange={(e) => setSearchType(e.target.value)}
+                            >
+                                {searchTypes.map((type) => (
+                                    <option key={type.value} value={type.value}>
+                                        {type.label}
+                                    </option>
+                                ))}
+                            </select>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Sök..."
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                            />
+                            <button type="submit" className="btn btn-dark">
+                                <i className="bi bi-search"></i>
+                            </button>
+                        </div>
                     </form>
                 </div>
 
