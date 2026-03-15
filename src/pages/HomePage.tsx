@@ -13,39 +13,36 @@ const HomePage = () => {
   const [latestBooks, setLatestBooks] = useState<Book[]>([])
   const [favorites, setFavorites] = useState<string[]>([])
   const [topRatings, setTopRatings] = useState<Record<string, number>>({})
+  const [topReviewCounts, setTopReviewCounts] = useState<Record<string, number>>({})
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true)
       try {
-        // Hämta favoriter om inloggad
         if (isAuthenticated) {
           const favData = await getFavorites()
           setFavorites(favData.map((f: { bookId: string }) => f.bookId))
         }
 
-        // Hämta top-rated bookIds från backend
         const topRatedData = await getTopRated()
         const topRatedBooksData = await Promise.all(
-          topRatedData.map((item: { bookId: string, averageRating: number }) =>
-            getBookById(item.bookId)
-          )
+          topRatedData.map((item: { bookId: string }) => getBookById(item.bookId))
         )
         setTopRatedBooks(topRatedBooksData.filter(Boolean))
-        // Spara snittbetyg per bookId
+
         const ratings: Record<string, number> = {}
-        topRatedData.forEach((item: { bookId: string, averageRating: number }) => {
+        const counts: Record<string, number> = {}
+        topRatedData.forEach((item: { bookId: string, averageRating: number, reviewCount: number }) => {
           ratings[item.bookId] = item.averageRating
+          counts[item.bookId] = item.reviewCount
         })
         setTopRatings(ratings)
+        setTopReviewCounts(counts)
 
-        // Hämta latest bookIds från backend
         const latestData = await getLatest()
         const latestBooksData = await Promise.all(
-          latestData.map((item: { bookId: string }) =>
-            getBookById(item.bookId)
-          )
+          latestData.map((item: { bookId: string }) => getBookById(item.bookId))
         )
         setLatestBooks(latestBooksData.filter(Boolean))
 
@@ -81,13 +78,14 @@ const HomePage = () => {
       {/* Högst betygsatta */}
       {topRatedBooks.length > 0 && (
         <section className="mb-5">
-          <h2 className="fw-bold mb-3" style={{ fontSize: '1.2rem' }}>Högst betygsatta</h2>
+          <h2 className="fw-bold mb-3 pb-2 border-bottom" style={{ fontSize: '1.2rem' }}>Högst betygsatta</h2>
           <div className="d-flex flex-wrap gap-3">
             {topRatedBooks.map((book) => (
               <BookCard
                 key={book.id}
                 book={book}
                 avgRating={topRatings[book.id]}
+                reviewCount={topReviewCounts[book.id]}
                 isFavorite={favorites.includes(book.id)}
                 onFavoriteChange={handleFavoriteChange}
               />
@@ -99,7 +97,7 @@ const HomePage = () => {
       {/* Nyligen recenserade */}
       {latestBooks.length > 0 && (
         <section className="mb-5">
-          <h2 className="fw-bold mb-3" style={{ fontSize: '1.2rem' }}>Nyligen recenserade</h2>
+          <h2 className="fw-bold mb-3 pb-2 border-bottom" style={{ fontSize: '1.2rem' }}>Nyligen recenserade</h2>
           <div className="d-flex flex-wrap gap-3">
             {latestBooks.map((book) => (
               <BookCard
@@ -113,14 +111,12 @@ const HomePage = () => {
         </section>
       )}
 
-      {/* Tom startsida — inga recensioner ännu */}
+      {/* Tom startsida */}
       {topRatedBooks.length === 0 && latestBooks.length === 0 && (
         <div className="text-center py-5">
           <i className="bi bi-book" style={{ fontSize: '3rem', color: '#212529' }}></i>
           <p className="mt-3 text-muted">Inga recensioner ännu — bli den första!</p>
-          <p className="text-muted">
-            Sök efter en bok ovan och lämna din första recension.
-          </p>
+          <p className="text-muted">Sök efter en bok ovan och lämna din första recension.</p>
         </div>
       )}
     </div>

@@ -1,21 +1,23 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { addFavorite, deleteFavorite } from '../services/favoriteService'
-import StarRating from './StarRating'
 import type { Book } from '../types/Book'
 
 interface BookCardProps {
     book: Book
     avgRating?: number
+    reviewCount?: number
     isFavorite?: boolean
     onFavoriteChange?: (bookId: string, isFavorite: boolean) => void
 }
 
-const BookCard = ({ book, avgRating, isFavorite = false, onFavoriteChange }: BookCardProps) => {
+const BookCard = ({ book, avgRating, reviewCount, isFavorite = false, onFavoriteChange }: BookCardProps) => {
     const { isAuthenticated, token } = useAuth()
+    const [imgError, setImgError] = useState(false)
 
     const handleFavorite = async (e: React.MouseEvent) => {
-        e.preventDefault() // förhindra navigation vid klick på favorit
+        e.preventDefault()
         if (!isAuthenticated || !token) return
 
         try {
@@ -32,27 +34,27 @@ const BookCard = ({ book, avgRating, isFavorite = false, onFavoriteChange }: Boo
     }
 
     const coverUrl = book.volumeInfo.imageLinks?.thumbnail?.replace('http://', 'https://') ?? ''
-
     const title = book.volumeInfo.title ?? 'Okänd titel'
     const authors = book.volumeInfo.authors?.join(', ') ?? 'Okänd författare'
 
     return (
         <Link to={`/book/${book.id}`} className="text-decoration-none text-dark">
-            <div className="card h-100 border-0 shadow-sm">
+            <div style={{ width: '128px' }}>
 
                 {/* Bokomslag */}
                 <div className="position-relative">
-                    {coverUrl ? (
+                    {coverUrl && !imgError ? (
                         <img
                             src={coverUrl}
                             alt={title}
-                            className="card-img-top"
-                            style={{ height: '200px', objectFit: 'contain', backgroundColor: '#6c757d' }}
+                            style={{ width: '128px', height: '192px', objectFit: 'cover', display: 'block' }}
+                            className="rounded"
+                            onError={() => setImgError(true)}
                         />
                     ) : (
                         <div
-                            className="card-img-top bg-secondary d-flex align-items-center justify-content-center"
-                            style={{ height: '200px' }}
+                            className="bg-secondary rounded d-flex align-items-center justify-content-center"
+                            style={{ width: '128px', height: '192px' }}
                         >
                             <i className="bi bi-book" style={{ fontSize: '2rem', color: 'white' }}></i>
                         </div>
@@ -62,7 +64,7 @@ const BookCard = ({ book, avgRating, isFavorite = false, onFavoriteChange }: Boo
                     {isAuthenticated && (
                         <button
                             className="position-absolute top-0 end-0 m-1 d-flex align-items-center justify-content-center rounded-circle border-0"
-                            style={{ background: 'rgba(255,255,255,0.7)', width: '32px', height: '32px', padding: 0, cursor: 'pointer' }}
+                            style={{ background: 'rgba(255,255,255,0.7)', width: '32px', height: '32px', cursor: 'pointer' }}
                             onClick={handleFavorite}
                             aria-label={isFavorite ? 'Ta bort favorit' : 'Lägg till favorit'}
                         >
@@ -75,20 +77,26 @@ const BookCard = ({ book, avgRating, isFavorite = false, onFavoriteChange }: Boo
                 </div>
 
                 {/* Kortinfo */}
-                <div className="card-body p-2">
-                    <h6 className="card-title mb-1" style={{
+                <div className="pt-2">
+                    <p className="mb-0 small fw-bold" style={{
                         overflow: 'hidden',
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical'
+                        WebkitBoxOrient: 'vertical',
+                        lineHeight: '1.3'
                     }}>
                         {title}
-                    </h6>
-                    <p className="card-text text-muted small mb-2">{authors}</p>
+                    </p>
+                    <p className="text-muted mb-1" style={{ fontSize: '0.75rem' }}>{authors}</p>
 
-                    {/* Betyg */}
                     {avgRating !== undefined && avgRating > 0 && (
-                        <StarRating rating={Math.round(avgRating)} />
+                        <p className="mb-0 small">
+                            <i className="bi bi-star-fill me-1" style={{ color: '#E8A838', fontSize: '0.75rem' }} />
+                            {avgRating.toFixed(1)}/5
+                            {reviewCount !== undefined && (
+                                <span className="text-muted ms-1">({reviewCount})</span>
+                            )}
+                        </p>
                     )}
                 </div>
             </div>

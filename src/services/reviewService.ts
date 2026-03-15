@@ -22,13 +22,13 @@ export const getUserReviews = async () => {
     return response.data
 }
 
-// Hämta 4 högst betygsatta böcker
+// Hämta 8 högst betygsatta böcker
 export const getTopRated = async () => {
     const response = await api.get('/reviews/top-rated')
     return response.data
 }
 
-// Hämta 4 senast recenserade böcker
+// Hämta 8 senast recenserade böcker
 export const getLatest = async () => {
     const response = await api.get('/reviews/latest')
     return response.data

@@ -52,19 +52,26 @@ const Navbar = () => {
     const renderMobileLinks = () => {
         if (!isAuthenticated) {
             return (
-                <div className="d-flex justify-content-end">
-                    <Link to="/login" className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Logga in</Link>
-                </div>
+                <>
+                    <Link to="/" className="fw-bold text-white text-decoration-none px-2 py-1 rounded" style={{ backgroundColor: '#212529', minWidth: '80px', textAlign: 'center' }}>FOLIO</Link>
+                    <Link to="/login" className="btn btn-outline-dark btn-sm" style={{ minWidth: '80px' }}>Logga in</Link>
+                </>
+            )
+        }
+        if (user?.role === 'admin') {
+            return (
+                <>
+                    <Link to="/" className="fw-bold text-white text-decoration-none px-2 py-1 rounded" style={{ backgroundColor: '#212529', minWidth: '80px', textAlign: 'center' }}>FOLIO</Link>
+                    <Link to="/admin" className="btn btn-outline-dark btn-sm" style={{ minWidth: '80px' }}>Admin</Link>
+                    <Link to="/profile" className="btn btn-outline-dark btn-sm" style={{ minWidth: '80px' }}>Min profil</Link>
+                </>
             )
         }
         return (
-            <div className="d-flex justify-content-between align-items-center w-100">
-                {user?.role === 'admin' && (
-                    <Link to="/admin" className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Admin</Link>
-                )}
-                <Link to="/profile" className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Min profil</Link>
-                <button onClick={handleLogout} className="btn btn-outline-dark btn-sm" style={{ minWidth: '85px' }}>Logga ut</button>
-            </div>
+            <>
+                <Link to="/" className="fw-bold text-white text-decoration-none px-2 py-1 rounded" style={{ backgroundColor: '#212529', minWidth: '80px', textAlign: 'center' }}>FOLIO</Link>
+                <Link to="/profile" className="btn btn-outline-dark btn-sm" style={{ minWidth: '80px' }}>Min profil</Link>
+            </>
         )
     }
 
@@ -123,8 +130,10 @@ const Navbar = () => {
                 {/* ===== MOBIL ===== */}
                 <div className="d-flex d-lg-none flex-column w-100 gap-2">
 
-                    {/* Rad 1 — Navigeringslänkar */}
-                    {renderMobileLinks()}
+                    {/* Rad 1 — FOLIO + navigeringslänkar */}
+                    <div className="d-flex align-items-center justify-content-between w-100">
+                        {renderMobileLinks()}
+                    </div>
 
                     {/* Rad 2 — Söktyp + sökruta */}
                     <form onSubmit={handleSearch}>

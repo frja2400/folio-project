@@ -101,15 +101,14 @@ const SearchPage = () => {
 
       {/* Bokrutnät */}
       {!isLoading && books.length > 0 && (
-        <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
+        <div className="d-flex flex-wrap gap-3">
           {books.map((book) => (
-            <div className="col" key={book.id}>
-              <BookCard
-                book={book}
-                isFavorite={favorites.includes(book.id)}
-                onFavoriteChange={handleFavoriteChange}
-              />
-            </div>
+            <BookCard
+              key={book.id}
+              book={book}
+              isFavorite={favorites.includes(book.id)}
+              onFavoriteChange={handleFavoriteChange}
+            />
           ))}
         </div>
       )}
