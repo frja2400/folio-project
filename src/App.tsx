@@ -13,6 +13,7 @@ import NotFoundPage from './pages/NotFoundPage'
 
 // Komponenter
 import Navbar from './components/Navbar'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const App = () => {
   return (
@@ -25,8 +26,16 @@ const App = () => {
           <Route path="/book/:id" element={<BookDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin" element={
+            <ProtectedRoute requireAdmin>
+              <AdminPage />
+            </ProtectedRoute>
+          } />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
