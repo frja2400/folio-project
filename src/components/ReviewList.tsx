@@ -37,24 +37,22 @@ const ReviewList = ({ reviews, onReviewDeleted }: ReviewListProps) => {
             {reviews.map((review) => (
                 <div key={review.id} className="mb-4 pb-4 border-bottom">
 
-                    <div key={review.id} className="mb-4 pb-4 border-bottom">
-                        <div className="d-flex flex-wrap align-items-center gap-3 mb-2">
-                            <span className="fw-bold">{review.username}</span>
-                            <span className="text-muted small">{formatDate(review.createdAt)}</span>
-                            <StarRating rating={review.rating} />
-                        </div>
-
-                        <p className="mb-3">{review.text}</p>
-
-                        {user?.role === 'admin' && (
-                            <button
-                                className="btn btn-sm btn-outline-danger"
-                                onClick={() => handleDelete(review.id)}
-                            >
-                                RADERA
-                            </button>
-                        )}
+                    <div className="d-flex flex-wrap align-items-center gap-3 mb-2">
+                        <span className="fw-bold">{review.username}</span>
+                        <span className="text-muted small">{formatDate(review.createdAt)}</span>
+                        <StarRating rating={review.rating} />
                     </div>
+
+                    <p className="mb-3">{review.text}</p>
+
+                    {user?.role === 'admin' && (
+                        <button
+                            className="btn btn-sm btn-outline-danger"
+                            onClick={() => handleDelete(review.id)}
+                        >
+                            RADERA
+                        </button>
+                    )}
                 </div>
             ))}
         </div>
