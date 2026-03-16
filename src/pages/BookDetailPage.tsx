@@ -10,6 +10,7 @@ import StarRating from '../components/StarRating'
 import type { Book } from '../types/Book'
 import type { Review } from '../types/Review'
 
+// Sidan som visar detaljer om en bok. Användare kan skriva och redigera sin recension och lägga till eller ta bort boken från sina favoriter.
 const BookDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const { isAuthenticated } = useAuth()
@@ -21,6 +22,7 @@ const BookDetailPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
+  // Hämta bokdata, recensioner, användarrecension och favoritstatus när komponenten laddas eller när id/isAuthenticated ändras.
   useEffect(() => {
     if (!id) return
     const fetchData = async () => {
@@ -115,8 +117,8 @@ const BookDetailPage = () => {
       <div className="row g-4 mb-5">
 
         {/* Omslag */}
-        <div className="col-auto">
-          <div className="position-relative">
+        <div className="col-12 col-sm-auto">
+          <div className="position-relative" style={{ width: '128px' }}>
             {coverUrl ? (
               <img
                 src={coverUrl}
@@ -137,7 +139,7 @@ const BookDetailPage = () => {
             {isAuthenticated && (
               <button
                 className="position-absolute top-0 end-0 m-1 d-flex align-items-center justify-content-center rounded-circle border-0"
-                style={{ background: 'rgba(255,255,255,0.7)', width: '32px', height: '32px', padding: 0, cursor: 'pointer' }}
+                style={{ background: 'rgba(255,255,255,0.7)', width: '32px', height: '32px', cursor: 'pointer' }}
                 onClick={handleFavorite}
                 aria-label={isFavorite ? 'Ta bort favorit' : 'Lägg till favorit'}
               >
@@ -151,7 +153,7 @@ const BookDetailPage = () => {
         </div>
 
         {/* Info */}
-        <div className="col">
+        <div className="col-12 col-sm">
 
           {/* Titel */}
           <h1 className="fw-bold mb-1" style={{ fontSize: '1.5rem' }}>{info.title}</h1>

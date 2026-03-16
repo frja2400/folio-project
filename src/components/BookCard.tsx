@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { addFavorite, deleteFavorite } from '../services/favoriteService'
 import type { Book } from '../types/Book'
 
+// Props för BookCard-komponenten
 interface BookCardProps {
     book: Book
     avgRating?: number
@@ -12,6 +13,7 @@ interface BookCardProps {
     onFavoriteChange?: (bookId: string, isFavorite: boolean) => void
 }
 
+// Komponent som visar en bok i ett kortformat, inklusive omslag, titel, författare, betyg och favoritstatus.
 const BookCard = ({ book, avgRating, reviewCount, isFavorite = false, onFavoriteChange }: BookCardProps) => {
     const { isAuthenticated, token } = useAuth()
     const [imgError, setImgError] = useState(false)
@@ -33,6 +35,7 @@ const BookCard = ({ book, avgRating, reviewCount, isFavorite = false, onFavorite
         }
     }
 
+    // Hämta omslagsbild, titel och författare från bokdatat. Använd en placeholder om omslaget inte finns eller inte kan laddas.
     const coverUrl = book.volumeInfo.imageLinks?.thumbnail?.replace('http://', 'https://') ?? ''
     const title = book.volumeInfo.title ?? 'Okänd titel'
     const authors = book.volumeInfo.authors?.join(', ') ?? 'Okänd författare'

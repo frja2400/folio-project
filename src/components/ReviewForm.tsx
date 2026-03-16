@@ -10,6 +10,7 @@ interface ReviewFormProps {
     onReviewDeleted: () => void
 }
 
+// Komponent för att skapa, uppdatera och ta bort recensioner. Visas på BookDetailPage när en användare är inloggad.
 const ReviewForm = ({ bookId, existingReview, onReviewSaved, onReviewDeleted }: ReviewFormProps) => {
     const [rating, setRating] = useState(0)
     const [text, setText] = useState('')

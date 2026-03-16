@@ -8,6 +8,7 @@ interface ReviewListProps {
     onReviewDeleted: () => void
 }
 
+// Komponent som visar en lista av recensioner för en bok. Varje recension visar användarnamn, datum, betyg och text.
 const ReviewList = ({ reviews, onReviewDeleted }: ReviewListProps) => {
     const { user } = useAuth()
 
@@ -45,6 +46,7 @@ const ReviewList = ({ reviews, onReviewDeleted }: ReviewListProps) => {
 
                     <p className="mb-3">{review.text}</p>
 
+                    {/* Administratörer kan ta bort andras recensioner */}
                     {user?.role === 'admin' && (
                         <button
                             className="btn btn-sm btn-outline-danger"

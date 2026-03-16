@@ -6,6 +6,7 @@ interface ProtectedRouteProps {
     requireAdmin?: boolean
 }
 
+// Komponent som skyddar rutter som kräver autentisering och/eller administratörsbehörighet.
 const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
     const { isAuthenticated, isLoading, user } = useAuth()
 
@@ -19,10 +20,12 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
         )
     }
 
+    // Om användaren inte är inloggad, omdirigera till login-sidan.
     if (!isAuthenticated) {
         return <Navigate to="/login" replace />
     }
 
+    // Om adminbehöriget krävs och användaren inte är admin, omdirigera till startsidan.
     if (requireAdmin && user?.role !== 'admin') {
         return <Navigate to="/" replace />
     }

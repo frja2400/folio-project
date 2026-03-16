@@ -19,6 +19,7 @@ interface FavoriteItem {
   bookId: string
 }
 
+// Profil-sidan där användaren kan se sina favoritböcker och sina recensioner.
 const ProfilePage = () => {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
@@ -47,6 +48,7 @@ const ProfilePage = () => {
       const revBooks = await Promise.all(reviewData.map(r => getBookById(r.bookId)))
       setReviewBooks(revBooks.filter(Boolean))
 
+      // Hämta snittbetyg och antal recensioner för varje favoritbok för att visa på BookCard
       const ratings: Record<string, number> = {}
       const counts: Record<string, number> = {}
       await Promise.all(

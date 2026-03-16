@@ -6,25 +6,28 @@ import { useAuth } from '../context/AuthContext'
 import BookCard from '../components/BookCard'
 import type { Book } from '../types/Book'
 
+// Startsidan som visar högst betygsatta och nyligen recenserade böcker.
 const HomePage = () => {
   const { isAuthenticated } = useAuth()
 
   const [topRatedBooks, setTopRatedBooks] = useState<Book[]>([])
   const [latestBooks, setLatestBooks] = useState<Book[]>([])
-  const [favorites, setFavorites] = useState<string[]>([])
-  const [topRatings, setTopRatings] = useState<Record<string, number>>({})
-  const [topReviewCounts, setTopReviewCounts] = useState<Record<string, number>>({})
+  const [favorites, setFavorites] = useState<string[]>([])         // Lista med bookIds som användaren favoritmarkerat
+  const [topRatings, setTopRatings] = useState<Record<string, number>>({})       // Snittbetyg per bookId
+  const [topReviewCounts, setTopReviewCounts] = useState<Record<string, number>>({})  // Antal recensioner per bookId
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true)
       try {
+        // Hämta användarens favoriter om inloggad
         if (isAuthenticated) {
           const favData = await getFavorites()
           setFavorites(favData.map((f: { bookId: string }) => f.bookId))
         }
 
+        // Hämta högst betygsatta böcker från backend och slå upp bokinformation från Google Books.
         const topRatedData = await getTopRated()
         const topRatedBooksData = await Promise.all(
           topRatedData.map((item: { bookId: string }) => getBookById(item.bookId))
@@ -40,6 +43,7 @@ const HomePage = () => {
         setTopRatings(ratings)
         setTopReviewCounts(counts)
 
+        // Hämta senast recenserade böcker från backend och slå upp bokinformation från Google Books.
         const latestData = await getLatest()
         const latestBooksData = await Promise.all(
           latestData.map((item: { bookId: string }) => getBookById(item.bookId))
@@ -56,6 +60,7 @@ const HomePage = () => {
     fetchData()
   }, [isAuthenticated])
 
+  // Uppdaterar favorites-listan direkt i state när användaren lägger till eller tar bort en favorit
   const handleFavoriteChange = (bookId: string, isFavorite: boolean) => {
     setFavorites((prev) =>
       isFavorite ? [...prev, bookId] : prev.filter((id) => id !== bookId)
