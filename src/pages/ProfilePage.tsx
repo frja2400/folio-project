@@ -6,6 +6,7 @@ import { getBookById } from '../services/googleBooksService'
 import { useAuth } from '../context/AuthContext'
 import BookCard from '../components/BookCard'
 import type { Book } from '../types/Book'
+import { BASE_URL } from '../config'
 
 interface UserReview {
   id: number
@@ -54,7 +55,7 @@ const ProfilePage = () => {
       await Promise.all(
         favIds.map(async (bookId) => {
           try {
-            const res = await fetch(`http://localhost:5237/api/reviews/${bookId}`)
+            const res = await fetch(`${BASE_URL}/reviews/${bookId}`)
             const data = await res.json()
             if (data.length > 0) {
               ratings[bookId] = data.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / data.length

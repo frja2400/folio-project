@@ -1,1 +1,1 @@
-export const BASE_URL = 'http://159.223.216.135:8080/api'
+export const BASE_URL = 'https://folio.fridajansson.com/api'

@@ -78,7 +78,17 @@ const AdminPage = () => {
   const handleDeleteReview = async (id: number) => {
     try {
       await deleteReview(id)
+      const deletedReview = reviews.find(r => r.id === id)
       setReviews(prev => prev.filter(r => r.id !== id))
+
+      // Uppdatera reviewCount för användaren
+      if (deletedReview) {
+        setUsers(prev => prev.map(u =>
+          u.username === deletedReview.username
+            ? { ...u, reviewCount: u.reviewCount - 1 }
+            : u
+        ))
+      }
     } catch {
       console.error('Kunde inte radera recensionen')
     }

@@ -4,7 +4,7 @@ Frontend-applikation för FOLIO, en bokrecensionsplattform byggd med React, Type
 
 ## Länk
 
-Applikationen finns tillgänglig på följande URL:
+Applikationen finns tillgänglig på följande URL: **https://folio.fridajansson.com**
 
 ## Installation
 
@@ -84,7 +84,7 @@ Applikationen använder Google Books API för att söka efter och hämta bokinfo
 
 API-URL:en är definierad i `src/config.ts`:
 ```typescript
-export const BASE_URL = 'http://159.223.216.135:8080/api'
+export const BASE_URL = 'https://folio.fridajansson.com/api'
 ```
 
 ## Validering
