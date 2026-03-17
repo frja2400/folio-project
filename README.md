@@ -84,7 +84,7 @@ Applikationen använder Google Books API för att söka efter och hämta bokinfo
 
 API-URL:en är definierad i `src/config.ts`:
 ```typescript
-export const BASE_URL = 'http://localhost:5237/api'
+export const BASE_URL = 'http://159.223.216.135:8080/api'
 ```
 
 ## Validering
