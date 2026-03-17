@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext'
 import { addFavorite, deleteFavorite } from '../services/favoriteService'
 import type { Book } from '../types/Book'
 
-// Props för BookCard-komponenten
 interface BookCardProps {
     book: Book
     avgRating?: number
