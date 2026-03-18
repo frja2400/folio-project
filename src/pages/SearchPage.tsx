@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { searchBooks } from '../services/googleBooksService'
 import { getFavorites } from '../services/favoriteService'
 import { useAuth } from '../context/AuthContext'
+import { getReviewsByBook } from '../services/reviewService'
 import BookCard from '../components/BookCard'
 import type { Book } from '../types/Book'
 
@@ -13,6 +14,7 @@ const SearchPage = () => {
   const q = searchParams.get('q') ?? ''
   const type = searchParams.get('type') ?? 'intitle'
 
+  const [bookRatings, setBookRatings] = useState<Record<string, { avg: number, count: number }>>({})
   const [books, setBooks] = useState<Book[]>([])
   const [favorites, setFavorites] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -46,6 +48,21 @@ const SearchPage = () => {
           index === self.findIndex((b) => b.id === book.id)
         )
         setBooks(unique)
+
+        const ratingsMap: Record<string, { avg: number, count: number }> = {}   // Snittbetyg och antal recensioner
+        for (const book of unique) {
+          try {
+            const reviews = await getReviewsByBook(book.id)
+            if (reviews.length > 0) {
+              const avg = reviews.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / reviews.length
+              ratingsMap[book.id] = { avg, count: reviews.length }
+            }
+          } catch {
+            // tyst fel
+          }
+        }
+        setBookRatings(ratingsMap)
+
       } catch {
         setError('Något gick fel vid sökningen, försök igen')
       } finally {
@@ -108,6 +125,8 @@ const SearchPage = () => {
               book={book}
               isFavorite={favorites.includes(book.id)}
               onFavoriteChange={handleFavoriteChange}
+              avgRating={bookRatings[book.id]?.avg}
+              reviewCount={bookRatings[book.id]?.count}
             />
           ))}
         </div>

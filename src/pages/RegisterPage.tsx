@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { register as registerService, login as loginService } from '../services/authService'
+import axios from 'axios'
 
 const RegisterPage = () => {
   const { login } = useAuth()
@@ -44,15 +45,20 @@ const RegisterPage = () => {
     setIsLoading(true)
 
     try {
-      // Registrera användaren
       await registerService(username, email, password)
-      // Logga in direkt efter registrering
       const token = await loginService(email, password)
       login(token)
       navigate('/')
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message)
+      if (axios.isAxiosError(err) && err.response?.data) {
+        const message = err.response.data
+        if (message.includes('Email')) {
+          setError('Det finns redan ett konto med denna e-postadress')
+        } else if (message.includes('Användarnamnet')) {
+          setError('Användarnamnet är redan taget, välj ett annat')
+        } else {
+          setError('Något gick fel, försök igen')
+        }
       } else {
         setError('Något gick fel, försök igen')
       }
