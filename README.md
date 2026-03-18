@@ -38,6 +38,8 @@ För att installera och köra lokalt:
 
 JWT-token lagras i `localStorage` och skickas automatiskt i `Authorization`-headern vid anrop till skyddade endpoints via en Axios-interceptor. Skyddad route `/profile` omdirigerar till `/login` om användaren inte är autentiserad, skyddad route `/admin` omdirigeras till `/` om användaren ej är admin. Navbar visar olika alternativ beroende på inloggningsstatus och roll.
 
+Inloggningsuppgifter till adminkontot finns i [ReviewAPI](https://github.com/frja2400/ReviewAPI).
+
 ## Projektstruktur
 ```
 src/
