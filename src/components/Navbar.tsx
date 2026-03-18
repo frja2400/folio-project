@@ -26,6 +26,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
         logout()
+        setQuery('')
         navigate('/')
     }
 
